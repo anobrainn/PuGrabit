@@ -1,0 +1,3085 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PU Grabit – Jasa Titip President University</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --p: #21409A;
+      --pl: #3a5bc4;
+      --pd: #162d6e;
+      --ac: #FF6B2B;
+      --bg: #fff;
+      --bg2: #F5F7FF;
+      --bg3: #EEF1FB;
+      --tx: #292929;
+      --tx2: #6B7280;
+      --tx3: #9CA3AF;
+      --bd: #E5E9F5;
+      --ok: #10B981;
+      --warn: #F59E0B;
+      --err: #EF4444;
+      --sh: 0 4px 20px rgba(33, 64, 154, .10);
+      --sh2: 0 2px 8px rgba(33, 64, 154, .07);
+      --r: 12px;
+      --r2: 8px;
+      --r3: 20px;
+      --font: 'Plus Jakarta Sans', sans-serif;
+      --disp: 'Sora', sans-serif
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--tx);
+      min-height: 100vh
+    }
+
+    .page {
+      display: none;
+      min-height: 100vh;
+      flex-direction: column
+    }
+
+    .page.active {
+      display: flex
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: var(--r2);
+      font-family: var(--font);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      transition: all .2s
+    }
+
+    .btn-p {
+      background: var(--p);
+      color: #fff
+    }
+
+    .btn-p:hover {
+      background: var(--pl);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(33, 64, 154, .25)
+    }
+
+    .btn-s {
+      background: var(--bg3);
+      color: var(--p);
+      border: 1.5px solid var(--p)
+    }
+
+    .btn-s:hover {
+      background: var(--p);
+      color: #fff
+    }
+
+    .btn-d {
+      background: var(--err);
+      color: #fff
+    }
+
+    .btn-sm {
+      padding: 8px 14px;
+      font-size: 13px
+    }
+
+    .btn-fw {
+      width: 100%
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700
+    }
+
+    .bg {
+      background: #DCFCE7;
+      color: #166534
+    }
+
+    .br {
+      background: #FEE2E2;
+      color: #991B1B
+    }
+
+    .ig {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px
+    }
+
+    .ig label {
+      font-size: 13px;
+      font-weight: 600
+    }
+
+    .f {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--bd);
+      border-radius: var(--r2);
+      font-size: 14px;
+      font-family: var(--font);
+      outline: none;
+      transition: all .2s;
+      background: #fff;
+      color: var(--tx)
+    }
+
+    .f:focus {
+      border-color: var(--p);
+      box-shadow: 0 0 0 3px rgba(33, 64, 154, .1)
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      color: var(--tx);
+      padding: 12px 24px;
+      border-radius: var(--r);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, .15);
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 9999;
+      border-left: 4px solid var(--p);
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+      transition: opacity .3s
+    }
+
+    .toast.show {
+      opacity: 1
+    }
+
+    .toast.ok {
+      border-left-color: var(--ok)
+    }
+
+    .toast.er {
+      border-left-color: var(--err)
+    }
+
+    .navbar {
+      background: #fff;
+      border-bottom: 1px solid var(--bd);
+      padding: 0 20px;
+      height: 62px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(33, 64, 154, .06);
+      flex-shrink: 0
+    }
+
+    .nbrand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      user-select: none
+    }
+
+    .nlogo {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg2)
+    }
+
+    .ntitle {
+      font-family: var(--disp);
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--p)
+    }
+
+    .ntitle span {
+      color: var(--ac)
+    }
+
+    .nright {
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .nibtn {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--r2);
+      background: var(--bg2);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--tx2);
+      transition: all .2s;
+      position: relative;
+      font-size: 17px
+    }
+
+    .nibtn:hover {
+      background: var(--bg3);
+      color: var(--p)
+    }
+
+    .nbadge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--ac);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #fff
+    }
+
+    .nbadge.on {
+      display: flex
+    }
+
+    .av {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--p);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      flex-shrink: 0
+    }
+
+    .bnav {
+      background: #fff;
+      border-top: 1px solid var(--bd);
+      padding: 6px 0 12px;
+      flex-shrink: 0
+    }
+
+    .bni {
+      display: flex;
+      justify-content: space-around
+    }
+
+    .bni-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      padding: 4px 20px;
+      border-radius: var(--r2);
+      transition: all .2s;
+      color: var(--tx3);
+      border: none;
+      background: none;
+      font-family: var(--font)
+    }
+
+    .bni-item.on,
+    .bni-item:hover {
+      color: var(--p)
+    }
+
+    .bni-item svg {
+      width: 22px;
+      height: 22px
+    }
+
+    .bni-item span {
+      font-size: 10px;
+      font-weight: 600
+    }
+
+    .ov {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .5);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      backdrop-filter: blur(4px)
+    }
+
+    .ov.open {
+      display: flex
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: var(--r3);
+      width: 100%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      animation: up .3s ease
+    }
+
+    @keyframes up {
+      from {
+        transform: translateY(28px);
+        opacity: 0
+      }
+
+      to {
+        transform: translateY(0);
+        opacity: 1
+      }
+    }
+
+    .mh {
+      padding: 20px 22px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between
+    }
+
+    .mt {
+      font-family: var(--disp);
+      font-size: 17px;
+      font-weight: 700
+    }
+
+    .mx {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bg2);
+      border: none;
+      cursor: pointer;
+      font-size: 17px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--tx2);
+      transition: all .2s
+    }
+
+    .mx:hover {
+      background: var(--bg3)
+    }
+
+    .mb {
+      padding: 16px 22px 22px
+    }
+
+    .ca {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--bg2)
+    }
+
+    .ph {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #fff;
+      border-bottom: 1px solid var(--bd);
+      flex-shrink: 0
+    }
+
+    .bkbtn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--r2);
+      background: var(--bg2);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all .2s
+    }
+
+    .bkbtn:hover {
+      background: var(--bg3)
+    }
+
+    .ptit {
+      font-family: var(--disp);
+      font-size: 17px;
+      font-weight: 700
+    }
+
+    .sh {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 16px 8px
+    }
+
+    .stit {
+      font-family: var(--disp);
+      font-size: 15px;
+      font-weight: 700
+    }
+
+    .slink {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--p);
+      cursor: pointer
+    }
+
+    /* LOGIN */
+    #page-login {
+      background: linear-gradient(145deg, #0d1c54, #21409A, #1a4f72);
+      align-items: center;
+      justify-content: center;
+      overflow-y: auto
+    }
+
+    .lw {
+      width: 100%;
+      max-width: 440px;
+      padding: 32px 20px;
+      margin: auto
+    }
+
+    .lbrand {
+      text-align: center;
+      margin-bottom: 22px
+    }
+
+    .lbig {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      object-fit: cover;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .15);
+      margin-bottom: 12px;
+      background: var(--bg2);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .lname {
+      font-family: var(--disp);
+      font-size: 26px;
+      font-weight: 800;
+      color: #fff
+    }
+
+    .lname span {
+      color: var(--ac)
+    }
+
+    .lsub {
+      font-size: 13px;
+      color: rgba(255, 255, 255, .65);
+      margin-top: 4px
+    }
+
+    .lcard {
+      background: #fff;
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .25)
+    }
+
+    .lct {
+      font-family: var(--disp);
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 3px
+    }
+
+    .lcs {
+      font-size: 13px;
+      color: var(--tx2);
+      margin-bottom: 18px
+    }
+
+    .rg {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 18px
+    }
+
+    .rc {
+      padding: 14px 10px;
+      border-radius: 12px;
+      border: 2px solid var(--bd);
+      cursor: pointer;
+      text-align: center;
+      transition: all .2s;
+      background: var(--bg2)
+    }
+
+    .rc:hover {
+      border-color: var(--pl);
+      background: var(--bg3)
+    }
+
+    .rc.on {
+      border-color: var(--p);
+      background: var(--bg3);
+      box-shadow: 0 2px 12px rgba(33, 64, 154, .15)
+    }
+
+    .ri {
+      font-size: 26px;
+      margin-bottom: 6px
+    }
+
+    .rl {
+      font-size: 13px;
+      font-weight: 700
+    }
+
+    .rd {
+      font-size: 11px;
+      color: var(--tx2);
+      margin-top: 2px
+    }
+
+    .tabs {
+      display: flex;
+      background: var(--bg2);
+      border-radius: 10px;
+      padding: 3px;
+      margin-bottom: 18px;
+      border: 1px solid var(--bd)
+    }
+
+    .tbtn {
+      flex: 1;
+      padding: 9px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s;
+      color: var(--tx2)
+    }
+
+    .tbtn.on {
+      background: var(--p);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(33, 64, 154, .25)
+    }
+
+    .fs {
+      display: none
+    }
+
+    .fs.on {
+      display: block
+    }
+
+    .lfw {
+      position: relative;
+      margin-bottom: 14px
+    }
+
+    .lfl {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--tx2);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: .5px
+    }
+
+    .lfi {
+      position: absolute;
+      left: 13px;
+      bottom: 13px;
+      font-size: 16px;
+      pointer-events: none
+    }
+
+    .lf {
+      width: 100%;
+      padding: 13px 14px 13px 42px;
+      border: 1.5px solid var(--bd);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: var(--font);
+      outline: none;
+      transition: all .2s;
+      background: #fff;
+      color: var(--tx)
+    }
+
+    .lf:focus {
+      border-color: var(--p);
+      box-shadow: 0 0 0 3px rgba(33, 64, 154, .1)
+    }
+
+    .lbtn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      font-family: var(--disp);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .2s;
+      margin-top: 4px
+    }
+
+    .lbbl {
+      background: linear-gradient(135deg, var(--p), var(--pl));
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(33, 64, 154, .3)
+    }
+
+    .lbbl:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(33, 64, 154, .4)
+    }
+
+    .lbor {
+      background: linear-gradient(135deg, var(--ac), #21049a);
+      color: #fff;
+      box-shadow: 0 4px 16px rgba(255, 107, 43, .3)
+    }
+
+    .lbor:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 107, 43, .4)
+    }
+
+    .lfoot {
+      text-align: center;
+      margin-top: 14px;
+      font-size: 13px;
+      color: var(--tx2)
+    }
+
+    .link {
+      color: var(--p);
+      font-weight: 700;
+      cursor: pointer
+    }
+
+    .link:hover {
+      text-decoration: underline
+    }
+
+    .dtit {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, .9);
+      margin-bottom: 6px
+    }
+
+    .drow {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 3px;
+      align-items: center
+    }
+
+    .dlbl {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .6)
+    }
+
+    .dval {
+      font-size: 11px;
+      color: rgba(255, 255, 255, .9);
+      font-weight: 600;
+      font-family: monospace;
+      background: rgba(255, 255, 255, .1);
+      padding: 2px 8px;
+      border-radius: 4px
+    }
+
+    /* CUSTOMER HOME */
+    .hero {
+      background: linear-gradient(135deg, var(--p), var(--pl));
+      color: #fff;
+      padding: 24px 16px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 180px;
+      height: 180px;
+      background: rgba(255, 255, 255, .07);
+      border-radius: 50%
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      right: 20px;
+      width: 140px;
+      height: 140px;
+      background: rgba(255, 255, 255, .05);
+      border-radius: 50%
+    }
+
+    .hgr {
+      font-size: 13px;
+      opacity: .8;
+      margin-bottom: 2px
+    }
+
+    .htit {
+      font-family: var(--disp);
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 6px
+    }
+
+    .hsub {
+      font-size: 13px;
+      opacity: .85
+    }
+
+    .hchips {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap
+    }
+
+    .hchip {
+      background: rgba(255, 255, 255, .15);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 600
+    }
+
+    .sscroll {
+      display: flex;
+      gap: 12px;
+      padding: 0 16px 6px;
+      overflow-x: auto;
+      scrollbar-width: none
+    }
+
+    .sscroll::-webkit-scrollbar {
+      display: none
+    }
+
+    .schip {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+      cursor: pointer
+    }
+
+    .schip-ic {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: var(--sh2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      border: 2px solid var(--bd);
+      transition: all .2s
+    }
+
+    .schip.on .schip-ic {
+      border-color: var(--p);
+      background: var(--bg3)
+    }
+
+    .schip-nm {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--tx);
+      text-align: center;
+      max-width: 60px
+    }
+
+    .pgrid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      padding: 0 12px 12px
+    }
+
+    @media(min-width:540px) {
+      .pgrid {
+        grid-template-columns: repeat(3, 1fr)
+      }
+    }
+
+    @media(min-width:800px) {
+      .pgrid {
+        grid-template-columns: repeat(4, 1fr)
+      }
+    }
+
+    @media(min-width:1100px) {
+      .pgrid {
+        grid-template-columns: repeat(5, 1fr)
+      }
+    }
+
+    .pcard {
+      background: #fff;
+      border-radius: var(--r);
+      box-shadow: var(--sh2);
+      border: 1px solid var(--bd);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all .2s
+    }
+
+    .pcard:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sh)
+    }
+
+    .pimg {
+      width: 100%;
+      aspect-ratio: 1;
+      background: var(--bg3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 44px;
+      overflow: hidden
+    }
+
+    .pimg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .pbody {
+      padding: 10px
+    }
+
+    .pstore {
+      font-size: 11px;
+      color: var(--p);
+      font-weight: 600;
+      margin-bottom: 2px
+    }
+
+    .pname {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 3px;
+      line-height: 1.3
+    }
+
+    .pprice {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ac);
+      margin-bottom: 5px
+    }
+
+    .ploc {
+      font-size: 11px;
+      color: var(--tx2);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-wrap: wrap
+    }
+
+    .dok {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--ok);
+      display: inline-block;
+      flex-shrink: 0
+    }
+
+    .dno {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--err);
+      display: inline-block;
+      flex-shrink: 0
+    }
+
+    .empty {
+      text-align: center;
+      padding: 48px 20px;
+      color: var(--tx2);
+      grid-column: 1/-1
+    }
+
+    .eic {
+      font-size: 44px;
+      margin-bottom: 10px
+    }
+
+    /* STORE HOME */
+    .sherо {
+      background: linear-gradient(135deg, var(--pd), var(--p));
+      color: #fff;
+      padding: 24px 16px
+    }
+
+    .sstat {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 14px
+    }
+
+    .sbox {
+      background: rgba(255, 255, 255, .12);
+      border-radius: var(--r2);
+      padding: 12px;
+      text-align: center
+    }
+
+    .snum {
+      font-family: var(--disp);
+      font-size: 22px;
+      font-weight: 800
+    }
+
+    .slbl {
+      font-size: 11px;
+      opacity: .8;
+      margin-top: 2px
+    }
+
+    .mitem {
+      background: #fff;
+      border-radius: var(--r);
+      box-shadow: var(--sh2);
+      border: 1px solid var(--bd);
+      padding: 14px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      position: relative
+    }
+
+    .miimg {
+      width: 68px;
+      height: 68px;
+      border-radius: var(--r2);
+      background: var(--bg3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      flex-shrink: 0;
+      overflow: hidden
+    }
+
+    .miimg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+
+    .mibody {
+      flex: 1;
+      min-width: 0
+    }
+
+    .miname {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 3px
+    }
+
+    .miprice {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ac);
+      margin-bottom: 5px
+    }
+
+    .mimeta {
+      font-size: 11px;
+      color: var(--tx2);
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px
+    }
+
+    .mibtns {
+      display: flex;
+      gap: 8px
+    }
+
+    .tgl {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      transition: all .2s
+    }
+
+    .tgl-ok {
+      background: #DCFCE7;
+      color: #166534
+    }
+
+    .tgl-no {
+      background: #FEE2E2;
+      color: #991B1B
+    }
+
+    .delbtn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 30px;
+      height: 30px;
+      border-radius: var(--r2);
+      background: #FEE2E2;
+      color: var(--err);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      transition: all .2s
+    }
+
+    .delbtn:hover {
+      background: var(--err);
+      color: #fff
+    }
+
+    .ncrd {
+      background: #fff;
+      border-radius: var(--r);
+      border-left: 4px solid var(--p);
+      box-shadow: var(--sh2);
+      padding: 12px 14px;
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px
+    }
+
+    .nicbox {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--r2);
+      background: var(--bg3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0
+    }
+
+    .ntit {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 2px
+    }
+
+    .nmsg {
+      font-size: 12px;
+      color: var(--tx2)
+    }
+
+    .ntime {
+      font-size: 11px;
+      color: var(--tx3);
+      margin-top: 3px
+    }
+
+    .fab {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--p);
+      color: #fff;
+      border: none;
+      box-shadow: 0 6px 24px rgba(33, 64, 154, .4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      z-index: 99;
+      transition: all .2s
+    }
+
+    .fab:hover {
+      background: var(--pl);
+      transform: scale(1.08)
+    }
+
+    @media(min-width:769px) {
+      .fab {
+        bottom: 20px
+      }
+    }
+
+    .upl {
+      border: 2px dashed var(--bd);
+      border-radius: var(--r);
+      padding: 18px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s;
+      background: var(--bg2)
+    }
+
+    .upl:hover {
+      border-color: var(--p);
+      background: var(--bg3)
+    }
+
+    .upl.has {
+      border-color: var(--ok);
+      background: #f0fdf4
+    }
+
+    .uprev {
+      max-width: 100%;
+      max-height: 100px;
+      border-radius: var(--r2);
+      margin-top: 8px;
+      object-fit: contain
+    }
+
+    /* CART */
+    .citem {
+      background: #fff;
+      border-radius: var(--r);
+      box-shadow: var(--sh2);
+      border: 1px solid var(--bd);
+      padding: 12px 14px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 10px
+    }
+
+    .cimg {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--r2);
+      background: var(--bg3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+      overflow: hidden
+    }
+
+    .cimg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: var(--r2)
+    }
+
+    .cbody {
+      flex: 1;
+      min-width: 0
+    }
+
+    .cname {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 2px
+    }
+
+    .cstore {
+      font-size: 11px;
+      color: var(--p);
+      margin-bottom: 3px
+    }
+
+    .cprice {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--ac)
+    }
+
+    .qwrap {
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .qbtn {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--r2);
+      background: var(--bg3);
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all .2s
+    }
+
+    .qbtn:hover {
+      background: var(--p);
+      color: #fff
+    }
+
+    .qnum {
+      font-size: 14px;
+      font-weight: 700;
+      min-width: 22px;
+      text-align: center
+    }
+
+    .pgrd {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px
+    }
+
+    .pcrd {
+      padding: 14px 10px;
+      border-radius: var(--r);
+      border: 2px solid var(--bd);
+      cursor: pointer;
+      text-align: center;
+      transition: all .2s;
+      background: #fff
+    }
+
+    .pcrd.on {
+      border-color: var(--p);
+      background: var(--bg3)
+    }
+
+    .pcrd:hover {
+      border-color: var(--pl)
+    }
+
+    .pic {
+      font-size: 24px;
+      margin-bottom: 6px
+    }
+
+    .plbl {
+      font-size: 13px;
+      font-weight: 700
+    }
+
+    .psub {
+      font-size: 11px;
+      color: var(--tx2);
+      margin-top: 2px
+    }
+
+    .lcrd {
+      background: #fff;
+      border-radius: var(--r);
+      box-shadow: var(--sh2);
+      border: 1px solid var(--bd);
+      padding: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all .2s;
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .lcrd.on {
+      border-color: var(--p)
+    }
+
+    .lcrd:hover {
+      border-color: var(--pl)
+    }
+
+    .lic {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--r2);
+      background: var(--bg3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0
+    }
+
+    .sumbox {
+      background: #fff;
+      border-radius: var(--r);
+      box-shadow: var(--sh2);
+      border: 1px solid var(--bd);
+      padding: 14px
+    }
+
+    .srow {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--bd);
+      font-size: 14px
+    }
+
+    .srow:last-child {
+      border-bottom: none;
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--p)
+    }
+
+    /* RECEIPT */
+    .recwrap {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px 14px
+    }
+
+    .reccrd {
+      background: #fff;
+      border-radius: var(--r3);
+      box-shadow: var(--sh);
+      padding: 24px 20px
+    }
+
+    .rsuc {
+      width: 68px;
+      height: 68px;
+      background: #DCFCE7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      margin: 0 auto 14px
+    }
+
+    .rtit {
+      font-family: var(--disp);
+      font-size: 19px;
+      font-weight: 800;
+      text-align: center;
+      margin-bottom: 4px
+    }
+
+    .rsub {
+      font-size: 13px;
+      color: var(--tx2);
+      text-align: center
+    }
+
+    .rdiv {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 16px 0
+    }
+
+    .rlin {
+      flex: 1;
+      border-top: 2px dashed var(--bd)
+    }
+
+    .rcir {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--bg2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px
+    }
+
+    .rrow {
+      display: flex;
+      justify-content: space-between;
+      padding: 7px 0;
+      font-size: 13px
+    }
+
+    .rlbl {
+      color: var(--tx2)
+    }
+
+    .rval {
+      font-weight: 600
+    }
+
+    .rtot {
+      border-top: 2px solid var(--bd);
+      padding-top: 12px;
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between
+    }
+
+    /* TRACK */
+    .trwrap {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 14px
+    }
+
+    .mapbox {
+      background: linear-gradient(135deg, #e2e8f5, #d5dcee);
+      border-radius: var(--r);
+      height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .mapgrid {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(33, 64, 154, .06) 1px, transparent 1px), linear-gradient(90deg, rgba(33, 64, 154, .06) 1px, transparent 1px);
+      background-size: 40px 40px
+    }
+
+    .drvcrd {
+      background: #fff;
+      border-radius: var(--r);
+      box-shadow: var(--sh2);
+      border: 1px solid var(--bd);
+      padding: 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px
+    }
+
+    .drvav {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--p), var(--pl));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--disp);
+      font-weight: 800;
+      font-size: 18px;
+      flex-shrink: 0
+    }
+
+    .drvinf {
+      flex: 1
+    }
+
+    .drvnm {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 2px
+    }
+
+    .drvpl {
+      font-size: 12px;
+      color: var(--tx2)
+    }
+
+    .drvrt {
+      font-size: 12px;
+      color: var(--warn);
+      font-weight: 600
+    }
+
+    .drvbtns {
+      display: flex;
+      gap: 8px
+    }
+
+    .drvbtn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all .2s
+    }
+
+    .etabox {
+      background: var(--p);
+      color: #fff;
+      border-radius: var(--r);
+      padding: 14px;
+      text-align: center;
+      margin-bottom: 10px
+    }
+
+    .etal {
+      font-size: 12px;
+      opacity: .8;
+      margin-bottom: 4px
+    }
+
+    .etat {
+      font-family: var(--disp);
+      font-size: 26px;
+      font-weight: 800
+    }
+
+    .etaa {
+      font-size: 12px;
+      opacity: .8;
+      margin-top: 4px
+    }
+
+    .tsteps {
+      background: #fff;
+      border-radius: var(--r);
+      box-shadow: var(--sh2);
+      border: 1px solid var(--bd);
+      padding: 14px
+    }
+
+    .tstep {
+      display: flex;
+      gap: 10px;
+      padding: 6px 0
+    }
+
+    .stepcol {
+      display: flex;
+      flex-direction: column;
+      align-items: center
+    }
+
+    .sdot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      flex-shrink: 0
+    }
+
+    .sdot.done {
+      background: var(--ok)
+    }
+
+    .sdot.cur {
+      background: var(--p);
+      box-shadow: 0 0 0 4px rgba(33, 64, 154, .2)
+    }
+
+    .sdot.pend {
+      background: var(--bd)
+    }
+
+    .sline {
+      width: 2px;
+      flex: 1;
+      background: var(--bd);
+      margin: 4px 0;
+      min-height: 16px
+    }
+
+    .stxt {
+      flex: 1
+    }
+
+    .snm {
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 1px
+    }
+
+    .stm {
+      font-size: 11px;
+      color: var(--tx2)
+    }
+
+    @media(min-width:769px) {
+      .bnav {
+        display: none
+      }
+
+      .fab {
+        bottom: 20px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="toast" id="toast"></div>
+
+  <div class="ov" id="m-ai">
+    <div class="modal">
+      <div class="mh"><span class="mt">➕ Tambah Jastip Baru</span><button class="mx" onclick="closeM('m-ai')">✕</button>
+      </div>
+      <div class="mb">
+        <div class="ig"><label>Nama Produk *</label><input class="f" id="ai-name" placeholder="Makanan..."></div>
+        <div class="ig"><label>Harga (Rp) *</label><input class="f" id="ai-price" type="number" placeholder="25000">
+        </div>
+        <div class="ig"><label>Deskripsi</label><textarea class="f" id="ai-desc" rows="2"
+            placeholder="Keterangan..."></textarea></div>
+        <div class="ig"><label>Lokasi Pickup *</label>
+          <select class="f" id="ai-loc">
+            <option value="">Pilih Lokasi</option>
+            <option>SBH </option>
+            <option>NBH </option>
+            <option>Kampus PU - Gedung A</option>
+            <option>Kampus PU - Gedung B</option>
+            <option>Kampus PU - Kantin</option>
+            <option>Luar Kampus</option>
+          </select>
+        </div>
+        <div class="ig"><label>Estimasi Pengiriman</label><input class="f" id="ai-eta" placeholder="30–45 menit"></div>
+        <div class="ig"><label>Perkiraan Tiba</label><input class="f" id="ai-arrive" type="time"></div>
+        <div class="ig"><label>Foto Produk</label>
+          <div class="upl" id="ai-upl" onclick="document.getElementById('ai-file').click()">
+            <div id="ai-uph">📷<br><span style="font-size:12px;color:var(--tx2)">Klik untuk pilih foto</span></div>
+            <img id="ai-prev" class="uprev" style="display:none">
+          </div>
+          <input type="file" id="ai-file" accept="image/*" style="display:none" onchange="handleImg(this)">
+        </div>
+        <div class="ig"><label>Emoji (optional)</label><input class="f" id="ai-emoji" placeholder="🍜" maxlength="2">
+        </div>
+        <button class="btn btn-p btn-fw" onclick="submitItem()">🚀 Publish Jastip</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="ov" id="m-notif">
+    <div class="modal">
+      <div class="mh"><span class="mt">🔔 Order Notifications</span><button class="mx"
+          onclick="closeM('m-notif')">✕</button></div>
+      <div class="mb" id="m-notif-body">
+        <p style="color:var(--tx2);font-size:13px">No Notifications.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="ov" id="m-prod">
+    <div class="modal">
+      <div class="mh"><span class="mt" id="m-prod-title">Product Details</span><button class="mx"
+          onclick="closeM('m-prod')">✕</button></div>
+      <div class="mb" id="m-prod-body"></div>
+    </div>
+  </div>
+
+  <div class="ov" id="m-del">
+    <div class="modal" style="max-width:340px">
+      <div class="mh"><span class="mt">⚠️ Delete Item?</span></div>
+      <div class="mb">
+        <p style="font-size:13px;color:var(--tx2);margin-bottom:18px">Item ini akan dihapus dan tidak muncul lagi di
+          halaman customer.</p>
+        <div style="display:flex;gap:10px">
+          <button class="btn btn-s btn-fw" onclick="closeM('m-del')">Batal</button>
+          <button class="btn btn-d btn-fw" id="del-ok-btn">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ov" id="m-qris">
+    <div class="modal">
+      <div class="mh"><span class="mt">📱QRIS Payment</span><button class="mx" onclick="closeM('m-qris')">✕</button>
+      </div>
+      <div class="mb" style="text-align:center">
+        <p style="font-size:13px; color:var(--tx2); margin-bottom:14px;">Silakan scan QRIS di bawah ini, lalu upload
+          bukti transfer untuk melanjutkan pesanan.</p>
+
+        <img src="qr.jpeg" alt="QRIS PU Grabit"
+          style="width:200px; height:200px; border-radius:12px; border:2px solid var(--bd); margin-bottom:16px; object-fit:contain;"
+          id="qris-img-placeholder">
+
+        <div class="ig" style="text-align:left">
+          <label>Upload Bukti Transfer *</label>
+          <div class="upl" id="qris-upl" onclick="document.getElementById('qris-file').click()">
+            <div id="qris-uph">📄<br><span style="font-size:12px;color:var(--tx2)">Pilih Screenshot Transaksi</span>
+            </div>
+            <img id="qris-prev" class="uprev" style="display:none">
+          </div>
+          <input type="file" id="qris-file" accept="image/*" style="display:none" onchange="handleQrisImg(this)">
+        </div>
+        <button class="btn btn-p btn-fw" onclick="submitQrisPayment()" style="margin-top:10px;">Kirim & Proses Pesanan
+          🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page active" id="page-login">
+    <div class="lw">
+      <div class="lbrand">
+        <img src="logo.png" class="lbig" alt="Logo">
+        <div class="lname">PU <span>Grabit</span></div>
+        <div class="lsub">🎓 Personal Shopping Service President University</div>
+      </div>
+      <div class="lcard">
+        <div class="lct">Welcome!</div>
+        <div class="lcs">Log in or sign in to start shopping</div>
+        <div class="rg">
+          <div class="rc on" id="rc-cust" onclick="selRole('customer')">
+            <div class="ri">🛒</div>
+            <div class="rl">Customer</div>
+            <div class="rd">Order &amp; buy jastip</div>
+          </div>
+          <div class="rc" id="rc-store" onclick="selRole('store')">
+            <div class="ri">🏪</div>
+            <div class="rl">Store &amp; Driver</div>
+            <div class="rd">Manage your jastip</div>
+          </div>
+        </div>
+        <div class="tabs">
+          <button class="tbtn on" id="tab-in" onclick="swTab('in')">🔑 Log in</button>
+          <button class="tbtn" id="tab-up" onclick="swTab('up')">✨ Sign in</button>
+        </div>
+        <form class="fs on" id="fs-in" onsubmit="event.preventDefault(); doLogin();">
+          <div class="lfw"><label class="lfl">Email</label><span class="lfi">📧</span>
+            <input class="lf" id="li-email" type="email" placeholder="email@example.com" required>
+          </div>
+          <div class="lfw"><label class="lfl">Password</label><span class="lfi">🔒</span>
+            <input class="lf" id="li-pass" type="password" placeholder="Enter password" required>
+          </div>
+          <button type="submit" class="lbtn lbbl">Log in to PU Grabit →</button>
+          <div class="lfoot">Didn't have account? <span class="link" onclick="swTab('up')">Sign in now</span></div>
+        </form>
+
+        <form class="fs" id="fs-up" onsubmit="event.preventDefault(); doRegister();">
+          <div class="lfw"><label class="lfl">Full Name</label><span class="lfi">👤</span>
+            <input class="lf" id="ru-name" placeholder="Full Name" required>
+          </div>
+          <div class="lfw"><label class="lfl">WhatsApp Number</label><span class="lfi">📱</span>
+            <input class="lf" id="ru-wa" type="tel" placeholder="08XXXXXXXXXX" required>
+          </div>
+          <div class="lfw"><label class="lfl">Email</label><span class="lfi">📧</span>
+            <input class="lf" id="ru-email" type="email" placeholder="email@example.com" required>
+          </div>
+          <div class="lfw"><label class="lfl">Password</label><span class="lfi">🔒</span>
+            <input class="lf" id="ru-pass" type="password" placeholder="Min. 6 characters" required>
+          </div>
+
+          <button type="submit" class="lbtn lbbl">Create Account PU Grabit 🎉</button>
+          <div class="lfoot">Have Account? <span class="link" onclick="swTab('in')">Log in</span></div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-cust">
+    <nav class="navbar">
+      <div class="nbrand" onclick="goTo('page-cust')"><img src="logo.png" class="nlogo" alt="Logo">
+        <div class="ntitle">PU <span>Grabit</span></div>
+      </div>
+      <div class="nright">
+        <button class="nibtn" onclick="goTo('page-cart')" title="Keranjang">🛒<span class="nbadge"
+            id="cart-badge">0</span></button>
+        <div class="av" id="cust-av" onclick="goTo('page-profile')">U</div>
+      </div>
+    </nav>
+    <div class="ca">
+      <div class="hero">
+        <div class="hgr" id="cust-greet">Hello, Welcome! 👋</div>
+        <div class="htit">Newest food today 🔥</div>
+        <div class="hsub">Order now, delivered to dorm &amp; PU campus</div>
+        <div class="hchips"><span class="hchip">📍 SBH</span><span class="hchip">📍 NBH</span><span class="hchip">🎓 PU
+            Campus</span></div>
+      </div>
+      <div id="cust-active-order" style="display:none; padding:16px 16px 0;">
+        <div class="lcrd on"
+          style="margin-bottom:0; background:linear-gradient(135deg,var(--p),var(--pl)); color:#fff; border:none; box-shadow:0 8px 24px rgba(33,64,154,.25)"
+          onclick="goToTracking()">
+          <div class="lic" style="background:rgba(255,255,255,.2); font-size:20px; color:#fff;">🛵</div>
+          <div style="flex:1">
+            <div style="font-size:12px; opacity:0.85; margin-bottom:2px">Active Order</div>
+            <div style="font-size:14px; font-weight:700" id="ao-status">On Process...</div>
+          </div>
+          <div style="font-weight:700; font-size:13px; background:var(--ac); padding:6px 12px; border-radius:8px;">Track
+            ➔</div>
+        </div>
+      </div>
+      <div class="sh"><span class="stit">Open Now</span><span class="slink" onclick="filterBy('all')">All</span></div>
+      <div class="sscroll" id="store-filter-row"></div>
+      <div class="sh" style="padding-top:8px"><span class="stit">🛍️ Ready Now</span></div>
+      <div class="pgrid" id="products-grid"></div>
+    </div>
+    <nav class="bnav">
+      <div class="bni">
+        <button class="bni-item on" onclick="goTo('page-cust')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg><span>Home</span></button>
+        <button class="bni-item" onclick="goTo('page-cart')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="9" cy="21" r="1" />
+            <circle cx="20" cy="21" r="1" />
+            <path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6" />
+          </svg><span>Cart</span></button>
+        <button class="bni-item" onclick="goTo('page-profile')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="7" r="4" />
+            <path d="M5.5 21v-2a4 4 0 0 1 4-4h5a4 4 0 0 1 4 4v2" />
+          </svg><span>Account</span></button>
+      </div>
+    </nav>
+  </div>
+
+  <div class="page" id="page-store">
+    <nav class="navbar">
+      <div class="nbrand" onclick="goTo('page-store')">
+        <img src="logo.png" class="nlogo" alt="Logo">
+        <div class="ntitle">PU <span>Grabit</span> <span
+            style="font-size:11px;color:var(--tx2);font-weight:600">Store</span></div>
+      </div>
+      <div class="nright">
+        <button class="nibtn" onclick="openNotif()" title="Notifikasi">🔔<span class="nbadge"
+            id="notif-badge">0</span></button>
+        <div class="av" id="store-av" onclick="goTo('page-profile')">S</div>
+      </div>
+    </nav>
+    <div class="ca">
+      <div class="sherо">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+          <div>
+            <div style="font-size:12px;opacity:.7;margin-bottom:2px">Dashboard Toko</div>
+            <div style="font-family:var(--disp);font-size:18px;font-weight:800" id="store-welcome">Nama Store</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:11px;opacity:.7;margin-bottom:4px">Saldo Penghasilan</div>
+            <div
+              style="font-family:monospace;font-size:15px;font-weight:800;color:var(--ok);background:#fff;padding:4px 10px;border-radius:8px"
+              id="store-balance">Rp 0</div>
+          </div>
+        </div>
+        <div class="sstat">
+          <div class="sbox">
+            <div class="snum" id="s-total">0</div>
+            <div class="slbl">Total Item</div>
+          </div>
+          <div class="sbox">
+            <div class="snum" id="s-open">0</div>
+            <div class="slbl">Buka</div>
+          </div>
+          <div class="sbox">
+            <div class="snum" id="s-orders">0</div>
+            <div class="slbl">Order</div>
+          </div>
+        </div>
+      </div>
+      <div id="store-notif-area" style="display:none;padding:12px 12px 0">
+        <div class="sh" style="padding:0 0 8px"><span class="stit">🔔 Order Masuk</span></div>
+        <div id="store-notif-list"></div>
+      </div>
+      <div style="padding:12px 12px 0">
+        <div class="sh" style="padding:0 0 8px"><span class="stit">📦 Order Aktif</span></div>
+        <div id="store-orders-list"></div>
+      </div>
+      <div style="padding:12px">
+        <div class="sh" style="padding:0 0 8px"><span class="stit">📋 Jastip Saya</span><span class="slink"
+            onclick="openM('m-ai')">+ Tambah</span></div>
+        <div id="store-items-list"></div>
+      </div>
+    </div>
+    <button class="fab" onclick="openM('m-ai')">+</button>
+    <nav class="bnav">
+      <div class="bni">
+        <button class="bni-item on" onclick="goTo('page-store')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+            <polyline points="9 22 9 12 15 12 15 22" />
+          </svg><span>Home</span></button>
+        <button class="bni-item" onclick="openNotif()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.73 21a2 2 0 01-3.46 0" />
+          </svg><span>Notification</span></button>
+        <button class="bni-item" onclick="goTo('page-profile')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <circle cx="12" cy="7" r="4" />
+            <path d="M5.5 21v-2a4 4 0 0 1 4-4h5a4 4 0 0 1 4 4v2" />
+          </svg><span>Account</span></button>
+      </div>
+    </nav>
+  </div>
+
+  <div class="page" id="page-cart">
+    <div class="ph"><button class="bkbtn" onclick="goBack()">←</button><span class="ptit">🛒 Cart &amp; Payment</span>
+    </div>
+    <div class="ca" style="padding:14px">
+      <div class="sh" style="padding:0 0 10px"><span class="stit">Ordered Item</span></div>
+      <div id="cart-list"></div>
+      <div class="sh" style="padding:16px 0 10px"><span class="stit">📍 Delivery Location</span></div>
+      <div class="lcrd on" id="loc-sbh" onclick="selLoc('SBH ',3000,'loc-sbh')">
+        <div class="lic">🏢</div>
+        <div>
+          <div style="font-size:14px;font-weight:700">SBH</div>
+          <div style="font-size:12px;color:var(--tx2)">Fee: Rp 3.000</div>
+        </div>
+      </div>
+      <div class="lcrd" id="loc-nbh" onclick="selLoc('NBH ',6000,'loc-nbh')">
+        <div class="lic">🏛️</div>
+        <div>
+          <div style="font-size:14px;font-weight:700">NBH</div>
+          <div style="font-size:12px;color:var(--tx2)">Fee: Rp 6.000</div>
+        </div>
+      </div>
+      <div class="lcrd" id="loc-kp" onclick="selLoc('Kampus PU',4000,'loc-kp')">
+        <div class="lic">🎓</div>
+        <div>
+          <div style="font-size:14px;font-weight:700">PU Campus</div>
+          <div style="font-size:12px;color:var(--tx2)">Fee: Rp 4.000</div>
+        </div>
+      </div>
+      <div class="ig" style="margin-top:10px"><label>Notes / Room Number</label><input class="f" id="del-note"
+          placeholder="Contoh: Kamar 203, Lantai 2"></div>
+      <div class="sh" style="padding:16px 0 10px"><span class="stit">💳 Payment Method</span></div>
+      <div class="pgrd">
+        <div class="pcrd on" id="pay-qris" onclick="selPay('QRIS','pay-qris')">
+          <div class="pic">📱</div>
+          <div class="plbl">QRIS</div>
+          <div class="psub">Scan &amp; pay</div>
+        </div>
+        <div class="pcrd" id="pay-cash" onclick="selPay('Cash','pay-cash')">
+          <div class="pic">💵</div>
+          <div class="plbl">Cash</div>
+          <div class="psub">Pay by Cash</div>
+        </div>
+      </div>
+      <div class="sh" style="padding:16px 0 10px"><span class="stit">📝 Ordered Summary</span></div>
+      <div class="sumbox">
+        <div class="srow"><span>Subtotal Items</span><span id="s-sub">Rp 0</span></div>
+        <div class="srow"><span>Shipping Cost</span><span id="s-ongkir">Rp 5.000</span></div>
+        <div class="srow"><span>Platform Cost (5%)</span><span id="s-tax">Rp 0</span></div>
+        <div class="srow"><span>Total</span><span id="s-total-pay">Rp 0</span></div>
+      </div>
+
+      <button class="btn btn-p btn-fw" onclick="processCheckout()"
+        style="margin-top:14px;padding:15px;font-size:15px">💳 Pay Now</button>
+    </div>
+  </div>
+
+  <div class="page" id="page-receipt">
+    <div class="ca" style="background:var(--bg2)">
+      <div class="recwrap">
+        <div class="reccrd">
+          <div class="rsuc">✅</div>
+          <div class="rtit">Payment Success!</div>
+          <div class="rsub" id="r-oid">Order #PUGRABIT-XXXXX</div>
+          <div class="rdiv">
+            <div class="rlin"></div>
+            <div class="rcir">:D</div>
+            <div class="rlin"></div>
+          </div>
+          <div
+            style="font-size:12px;font-weight:700;color:var(--tx2);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">
+            Ordered Details</div>
+          <div id="r-items"></div>
+          <div class="rdiv">
+            <div class="rlin"></div>
+          </div>
+          <div class="rrow"><span class="rlbl">Subtotal</span><span class="rval" id="r-sub">Rp 0</span></div>
+          <div class="rrow"><span class="rlbl">Shipping Cost</span><span class="rval" id="r-ongkir">Rp 0</span></div>
+          <div class="rrow"><span class="rlbl">Platform Cost</span><span class="rval" id="r-tax">Rp 0</span></div>
+          <div class="rtot"><span style="font-weight:800;font-size:15px">Total Cost</span><span
+              style="font-weight:800;font-size:16px;color:var(--p)" id="r-total">Rp 0</span></div>
+          <div class="rdiv">
+            <div class="rlin"></div>
+          </div>
+          <div class="rrow"><span class="rlbl">Payment Method</span><span class="rval" id="r-method">—</span></div>
+          <div class="rrow"><span class="rlbl">Delivery Location</span><span class="rval" id="r-loc">—</span></div>
+          <div class="rrow"><span class="rlbl">Status</span><span class="badge bg">✅ Dibayar</span></div>
+          <div class="rrow"><span class="rlbl">Time</span><span class="rval" id="r-time">—</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px">
+            <button class="btn btn-s" onclick="toast('📤 Link berhasil disalin!')">📤 Share</button>
+            <button class="btn btn-p" onclick="goTo('page-track')">🛵 Track Orders</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-track">
+    <div class="ph"><button class="bkbtn" onclick="goTo('page-cust')">←</button><span class="ptit">🛵 Track
+        Orders</span></div>
+    <div class="ca" style="background:var(--bg2)">
+      <div class="trwrap">
+        <div class="mapbox">
+          <div class="mapgrid"></div>
+          <div style="font-size:36px;z-index:1">🛵</div>
+          <div style="font-size:12px;color:var(--tx2);z-index:1;font-weight:600">Driver on the Way...</div>
+        </div>
+        <div class="drvcrd">
+          <div class="drvav" id="t-drv-init">A</div>
+          <div class="drvinf">
+            <div class="drvnm" id="t-drv-name">Memuat Driver...</div>
+            <div class="drvpl" id="t-drv-pl">🏪 Store & Driver</div>
+            <div class="drvrt" id="t-drv-rt" style="display:none;">⭐ 4.9</div>
+          </div>
+          <div class="drvbtns">
+            <button id="btn-call-drv" class="drvbtn" style="background:#DCFCE7;color:var(--ok)">📞</button>
+            <button id="btn-wa-drv" class="drvbtn" style="background:#E0F2FE;color:#0369A1">💬</button>
+          </div>
+        </div>
+
+        <div class="etabox">
+          <div class="etal">ETA</div>
+          <div class="etat" id="t-eta-text">15 – 25 menit</div>
+          <div class="etaa" id="t-arrive">Around 14:30</div>
+        </div>
+        <div class="tsteps">
+          <div style="font-size:14px;font-weight:700;margin-bottom:10px">Status Pesanan</div>
+          <div class="tstep">
+            <div class="stepcol">
+              <div class="sdot done"></div>
+              <div class="sline"></div>
+            </div>
+            <div class="stxt">
+              <div class="snm">✅ Order Confirmed</div>
+              <div class="stm" id="t-step1">—</div>
+            </div>
+          </div>
+          <div class="tstep">
+            <div class="stepcol">
+              <div class="sdot cur"></div>
+              <div class="sline"></div>
+            </div>
+            <div class="stxt">
+              <div class="snm">🛒 Driver Take the Order</div>
+              <div class="stm">On Process...</div>
+            </div>
+          </div>
+          <div class="tstep">
+            <div class="stepcol">
+              <div class="sdot pend"></div>
+              <div class="sline"></div>
+            </div>
+            <div class="stxt">
+              <div class="snm">🛵 On the Way</div>
+              <div class="stm" style="color:var(--tx3)">Waiting...</div>
+            </div>
+          </div>
+          <div class="tstep">
+            <div class="stepcol">
+              <div class="sdot pend"></div>
+            </div>
+            <div class="stxt">
+              <div class="snm">📦 Order Arrived</div>
+              <div class="stm" style="color:var(--tx3)">Waiting...</div>
+            </div>
+          </div>
+        </div>
+        <div id="t-oid" style="text-align:center;font-size:11px;color:var(--tx3);padding:8px 0 16px"></div>
+        <button class="btn btn-s btn-fw" onclick="goTo('page-cust')">🏠 Back to Home</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="page-profile">
+    <div class="ph"><button class="bkbtn" onclick="goBack()">←</button><span class="ptit">👤 Profile & Account</span>
+    </div>
+    <div class="ca" style="padding:16px; background:var(--bg2);">
+
+      <div style="text-align:center; padding: 24px 0 16px;">
+        <div style="position:relative; display:inline-block;">
+          <div class="av" id="prof-av"
+            style="width:84px; height:84px; font-size:32px; margin:0 auto; box-shadow:0 8px 24px rgba(33,64,154,.2); border:3px solid #fff; background:linear-gradient(135deg,var(--p),var(--pl)); overflow:hidden;">
+            <img id="prof-pic-preview" style="width:100%; height:100%; object-fit:cover; display:none;">
+            <span id="prof-av-init">U</span>
+          </div>
+          <button
+            style="position:absolute; bottom:0; right:-4px; width:32px; height:32px; border-radius:50%; background:var(--bg); color:var(--tx); border:none; box-shadow:0 4px 12px rgba(0,0,0,.15); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:14px; transition:all .2s;"
+            onclick="document.getElementById('prof-pic-file').click()" onmouseover="this.style.transform='scale(1.1)'"
+            onmouseout="this.style.transform='scale(1)'">📷</button>
+          <input type="file" id="prof-pic-file" accept="image/*" style="display:none" onchange="handleProfPic(this)">
+        </div>
+        <div style="font-family:var(--disp); font-size:20px; font-weight:800; margin-top:14px;" id="prof-name-disp">User
+          Name</div>
+        <div style="font-size:14px; color:var(--tx2); margin-top:2px;" id="prof-email-disp">user@email.com</div>
+        <div style="margin-top:8px;"><span class="badge bg" id="prof-role-disp"
+            style="font-size:12px; padding:4px 12px;">Customer</span></div>
+      </div>
+
+      <div
+        style="background:#fff; border-radius:var(--r3); box-shadow:var(--sh2); padding:20px; margin-bottom:16px; border:1px solid var(--bd);">
+        <div
+          style="font-family:var(--disp); font-size:16px; font-weight:700; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+          <span style="font-size:18px;">⚙️</span> Account Settings
+        </div>
+        <div class="ig">
+          <label style="color:var(--tx2); font-size:12px; text-transform:uppercase; letter-spacing:0.5px;">Full
+            Name</label>
+          <input class="f" id="prof-name" placeholder="Enter your full name" style="background:var(--bg2);">
+        </div>
+        <div class="ig">
+          <label style="color:var(--tx2); font-size:12px; text-transform:uppercase; letter-spacing:0.5px;">New
+            Password</label>
+          <input class="f" id="prof-pass" type="password" placeholder="Leave blank to keep current"
+            style="background:var(--bg2);">
+        </div>
+        <button class="btn btn-p btn-fw" id="btn-save-prof" onclick="saveProfile()"
+          style="margin-top:12px; padding:14px; font-size:15px; border-radius:12px; box-shadow:0 4px 16px rgba(33,64,154,.2);">💾
+          Save Changes</button>
+      </div>
+
+      <button class="btn btn-fw" onclick="doLogout()"
+        style="padding:14px; font-size:15px; font-family:var(--disp); border-radius:var(--r3); background:#FEE2E2; color:#991B1B; border:1px solid #FCA5A5; box-shadow:0 4px 12px rgba(239,68,68,.1); margin-bottom:24px; transition:all .2s;"
+        onmouseover="this.style.background='#FECACA'" onmouseout="this.style.background='#FEE2E2'">🚪 Log Out</button>
+    </div>
+  </div>
+
+  <script>
+    // ═══════════════ DATABASE ═══════════════
+    const SUPABASE_URL = 'https://ibyovfirhvgdzncdwaps.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_XUvdVamTLhWXwp__m9J9MQ_6B6n2s0f';
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const DB = { users: [], items: [], orders: [], notifications: [], cart: [] };
+
+    // ═══════════════ APP STATE ═══════════════
+    const A = {
+      user: null,
+      page: 'page-login',
+      role: 'customer',
+      loc: 'SBH – ',
+      locCost: 3000,
+      pay: 'QRIS',
+      imgFile: null,
+      delId: null,
+      filter: 'all',
+      activeOrder: null,
+      trackInterval: null,
+      qrisFile: null, // Menyimpan screenshot bukti pembayaran QRIS
+      profPicFile: null
+    };
+
+    // ═══════════════ UTILS ═══════════════
+    const G = id => document.getElementById(id);
+    function toast(msg, type) { const t = G('toast'); t.textContent = msg; t.className = 'toast show' + (type ? ' ' + type : ''); clearTimeout(t._t); t._t = setTimeout(() => { t.className = 'toast' }, 2800) }
+    function rp(n) { return 'Rp ' + Number(n).toLocaleString('id-ID') }
+    function uid(p) { return p + '-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substr(2, 3).toUpperCase() }
+    function now() { const d = new Date(); return d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' · ' + d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) }
+    function openM(id) { G(id).classList.add('open') }
+    function closeM(id) { G(id).classList.remove('open') }
+    function goTo(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      const pg = G(id); pg.classList.add('active'); A.page = id;
+      window.scrollTo(0, 0);
+      const ca = pg.querySelector('.ca'); if (ca) ca.scrollTop = 0;
+      if (id === 'page-cust') renderCust();
+      if (id === 'page-store') renderStore();
+      if (id === 'page-cart') renderCart();
+      if (id === 'page-profile') renderProfile();
+    }
+    function goBack() { A.user && A.user.role === 'customer' ? goTo('page-cust') : goTo('page-store') }
+
+    // ═══════════════ AUTH ═══════════════
+    function selRole(r) {
+      A.role = r;
+      G('rc-cust').classList.toggle('on', r === 'customer');
+      G('rc-store').classList.toggle('on', r === 'store');
+    }
+    function swTab(t) {
+      G('tab-in').classList.toggle('on', t === 'in');
+      G('tab-up').classList.toggle('on', t === 'up');
+      G('fs-in').classList.toggle('on', t === 'in');
+      G('fs-up').classList.toggle('on', t === 'up');
+    }
+
+    async function doLogin() {
+      const email = G('li-email').value.trim();
+      const pass = G('li-pass').value;
+
+      if (!email || !pass) { toast('❌ Fill email and password!', 'er'); return; }
+
+      const { data: authData, error: authError } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
+      if (authError) { toast('❌ Wrong Email or password!', 'er'); return; }
+
+      const { data: userData, error: userError } = await supabaseClient.from('users').select('*').eq('id', authData.user.id).single();
+      if (userError || !userData) { toast('❌ Profil not Founded', 'er'); return; }
+
+      const exp = A.role === 'store' ? 'store' : 'customer';
+      if (userData.role !== exp) { toast(`❌ This Account is not ${exp === 'store' ? 'Store & Driver' : 'Customer'} Type`, 'er'); return; }
+
+      A.user = userData;
+      DB.cart = [];
+
+      if (userData.role === 'store') {
+        supabaseClient.channel('store-global')
+          .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications', filter: `store_id=eq.${userData.id}` }, payload => {
+            toast('🔔 Pesanan Baru Masuk!', 'ok');
+            renderStore();
+          }).subscribe();
+      }
+
+      toast('✅ Welcome, ' + userData.name + '!', 'ok');
+
+      if (userData.role === 'customer') {
+        if (userData.avatar_url || localStorage.getItem('avatar_' + userData.id)) {
+          G('cust-av').innerHTML = `<img src="${userData.avatar_url || localStorage.getItem('avatar_' + userData.id)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+        } else {
+          G('cust-av').textContent = userData.name[0].toUpperCase();
+        }
+        G('cust-greet').textContent = 'Hello, ' + userData.name.split(' ')[0] + '! 👋';
+        goTo('page-cust');
+      } else {
+        if (userData.avatar_url || localStorage.getItem('avatar_' + userData.id)) {
+          G('store-av').innerHTML = `<img src="${userData.avatar_url || localStorage.getItem('avatar_' + userData.id)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+        } else {
+          G('store-av').textContent = userData.name[0].toUpperCase();
+        }
+        G('store-welcome').textContent = userData.name;
+        goTo('page-store');
+      }
+    }
+
+    async function doRegister() {
+      const name = G('ru-name').value.trim();
+      const wa = G('ru-wa').value.trim();
+      const email = G('ru-email').value.trim();
+      const pass = G('ru-pass').value;
+
+      if (!name || !wa || !email || !pass) { toast('❌ Filled all the data!', 'er'); return; }
+      if (pass.length < 6) { toast('❌ Password min. 6 Characters!', 'er'); return; }
+
+      const { data: authData, error: authError } = await supabaseClient.auth.signUp({ email, password: pass });
+      if (authError) { toast('❌ Failed Sign-in: ' + authError.message, 'er'); return; }
+
+      const { error: dbError } = await supabaseClient.from('users').insert([{
+        id: authData.user.id,
+        name: name, email: email, password: pass, wa: wa,
+        role: A.role === 'store' ? 'store' : 'customer'
+      }]);
+
+      if (dbError) { console.error(dbError); toast('❌ Failed to save profile!', 'er'); return; }
+
+      toast('🎉 Account Successfully Created! Please Login.', 'ok');
+      G('li-email').value = email;
+      G('li-pass').value = pass;
+      swTab('in');
+    }
+
+    async function doLogout() {
+      await supabaseClient.auth.signOut();
+      A.user = null; DB.cart = []; G('li-email').value = ''; G('li-pass').value = '';
+      if (A.trackInterval) clearInterval(A.trackInterval);
+      updCartBadge(); goTo('page-login'); toast('👋 Good Byee!');
+    }
+
+    // ═══════════════ CUSTOMER HOME ═══════════════
+    function renderCust() {
+      A.filter = 'all';
+      renderGrid();
+      checkActiveOrder();
+    }
+
+    function filterBy(sid) { A.filter = sid; renderGrid(); }
+
+    function renderFilters() {
+      const row = G('store-filter-row');
+      const stores = {};
+      DB.items.forEach(i => {
+        if (i.is_open) stores[i.store_id] = { id: i.store_id, name: i.store_name, emoji: i.emoji || '🏪' };
+      });
+
+      let h = `<div class="schip ${A.filter === 'all' ? 'on' : ''}" onclick="filterBy('all')"><div class="schip-ic">🏪</div><div class="schip-nm">All</div></div>`;
+      Object.values(stores).forEach(s => {
+        h += `<div class="schip ${A.filter === s.id ? 'on' : ''}" onclick="filterBy('${s.id}')"><div class="schip-ic">${s.emoji}</div><div class="schip-nm">${s.name}</div></div>`;
+      });
+      row.innerHTML = h;
+    }
+
+    async function renderGrid() {
+      const grid = G('products-grid');
+      grid.innerHTML = '<p style="text-align:center; padding: 20px;">Memuat data jastip...</p>';
+
+      const { data: items, error } = await supabaseClient.from('items').select('*');
+      if (error) { toast('❌ Gagal memuat jastip', 'er'); return; }
+
+      DB.items = items || [];
+      renderFilters();
+
+      const filteredItems = DB.items.filter(i => A.filter === 'all' || i.store_id === A.filter);
+
+      if (!filteredItems || filteredItems.length === 0) {
+        grid.innerHTML = `<div class="empty"><div class="eic">🧺</div><p>There's no jastip open yet</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = filteredItems.map(it => `
+    <div class="pcard" onclick="openProd('${it.id}')">
+      <div class="pimg">${it.img_url ? `<img src="${it.img_url}">` : (it.emoji || '🛍️')}</div>
+      <div class="pbody">
+        <div class="pstore">${it.store_name}</div>
+        <div class="pname">${it.name}</div>
+        <div class="pprice">${rp(it.price)}</div>
+        <div class="ploc">
+           <span class="${it.is_open ? 'dok' : 'dno'}"></span>
+           <span style="font-size:11px;color:${it.is_open ? 'var(--ok)' : 'var(--err)'};font-weight:600">
+             ${it.is_open ? 'Buka' : 'Tutup'}
+           </span>&nbsp;📍 ${(it.location || '').split('–')[0].trim()}
+        </div>
+        ${it.is_open ? `<button class="btn btn-p btn-sm btn-fw" onclick="event.stopPropagation();addCart('${it.id}')">+ Tambah</button>` : `<button class="btn btn-sm btn-fw" style="background:var(--bg2);color:var(--tx3);cursor:not-allowed">Tutup</button>`}
+      </div>
+    </div>`).join('');
+    }
+
+    function openProd(id) {
+      const it = DB.items.find(i => i.id === id); if (!it) return;
+      G('m-prod-title').textContent = it.name;
+      G('m-prod-body').innerHTML = `
+    <div style="text-align:center;background:var(--bg2);border-radius:var(--r);padding:20px;margin-bottom:14px;font-size:60px">${it.img_url ? `<img src="${it.img_url}" style="max-height:130px;border-radius:var(--r2);object-fit:cover">` : (it.emoji || '🛍️')}</div>
+    <div style="font-size:12px;color:var(--p);font-weight:700;margin-bottom:2px">${it.store_name}</div>
+    <div style="font-size:17px;font-weight:800;margin-bottom:4px">${it.name}</div>
+    <div style="font-size:19px;font-weight:800;color:var(--ac);margin-bottom:10px">${rp(it.price)}</div>
+    <div style="font-size:13px;color:var(--tx2);margin-bottom:12px">${it.description || 'Tidak ada deskripsi.'}</div>
+    <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:16px">
+      <div style="font-size:12px;color:var(--tx2)">📍 ${it.location}</div>
+      <div style="font-size:12px;color:var(--tx2)">⏱️ ETA: ${it.eta || '—'}</div>
+      <div style="font-size:12px;color:var(--tx2)">🕐 Perkiraan tiba: ${it.arrive || '—'}</div>
+      <span class="badge ${it.is_open ? 'bg' : 'br'}">${it.is_open ? '✅ Open' : '❌ Close'}</span>
+    </div>
+    ${it.is_open ? `<button class="btn btn-p btn-fw" onclick="addCart('${it.id}');closeM('m-prod')">🛒 Add to Cart</button>` : `<button class="btn btn-fw" style="background:var(--bg2);color:var(--tx3);cursor:not-allowed">Jastip Sedang Tutup</button>`}`;
+      openM('m-prod');
+    }
+
+    // ═══════════════ CART ═══════════════
+    function addCart(itemId) {
+      const it = DB.items.find(i => i.id === itemId);
+      if (!it || !it.is_open) { toast('❌ Its closed!', 'er'); return }
+      const ex = DB.cart.find(c => c.itemId === itemId);
+      ex ? ex.qty++ : DB.cart.push({ itemId, qty: 1 });
+      updCartBadge(); toast('✅ ' + it.name + ' Added!', 'ok');
+    }
+    function updCartBadge() {
+      const n = DB.cart.reduce((s, c) => s + c.qty, 0);
+      const b = G('cart-badge'); b.textContent = n; b.classList.toggle('on', n > 0);
+    }
+    function renderCart() {
+      const list = G('cart-list');
+      if (!DB.cart.length) { list.innerHTML = `<div class="empty"><div class="eic">🛒</div><p>Cart Empty.<br><span style="font-size:12px;color:var(--tx3)">Tambahkan item dari halaman home!</span></p></div>`; updSum(); return }
+      list.innerHTML = DB.cart.map(c => {
+        const it = DB.items.find(i => i.id === c.itemId); if (!it) return '';
+        return `<div class="citem">
+      <div class="cimg">${it.img_url ? `<img src="${it.img_url}">` : (it.emoji || '🛍️')}</div>
+      <div class="cbody"><div class="cname">${it.name}</div><div class="cstore">${it.store_name}</div><div class="cprice">${rp(it.price * c.qty)}</div></div>
+      <div class="qwrap">
+        <button class="qbtn" onclick="chQty('${c.itemId}',-1)">−</button>
+        <span class="qnum">${c.qty}</span>
+        <button class="qbtn" onclick="chQty('${c.itemId}',1)">+</button>
+      </div>
+    </div>`}).join('');
+      updSum();
+    }
+    function chQty(itemId, d) {
+      const i = DB.cart.findIndex(c => c.itemId === itemId); if (i < 0) return;
+      DB.cart[i].qty += d; if (DB.cart[i].qty <= 0) DB.cart.splice(i, 1);
+      updCartBadge(); renderCart();
+    }
+    function updSum() {
+      const sub = DB.cart.reduce((s, c) => { const i = DB.items.find(x => x.id === c.itemId); return s + (i ? i.price * c.qty : 0) }, 0);
+      const tax = Math.round(sub * .05), total = sub + A.locCost + tax;
+      G('s-sub').textContent = rp(sub); G('s-ongkir').textContent = rp(A.locCost); G('s-tax').textContent = rp(tax); G('s-total-pay').textContent = rp(total);
+    }
+    function selLoc(name, cost, elId) {
+      A.loc = name; A.locCost = cost;
+      document.querySelectorAll('.lcrd').forEach(c => c.classList.remove('on')); G(elId).classList.add('on'); updSum();
+    }
+    function selPay(method, elId) {
+      A.pay = method;
+      document.querySelectorAll('.pcrd').forEach(c => c.classList.remove('on')); G(elId).classList.add('on');
+    }
+
+    // ═══════════════ CHECKOUT & PAYMENT ═══════════════
+    function processCheckout() {
+      if (!DB.cart.length) { toast('❌ Cart still Empty!', 'er'); return; }
+
+      if (A.pay === 'QRIS') {
+        // Tampilkan modal QRIS
+        openM('m-qris');
+      } else {
+        // Jika cash, langsung lanjut proses
+        doPayment();
+      }
+    }
+
+    function handleQrisImg(input) {
+      const file = input.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { toast('❌ Foto max 5MB!', 'er'); return; }
+
+      A.qrisFile = file;
+      const r = new FileReader();
+      r.onload = e => {
+        G('qris-prev').src = e.target.result;
+        G('qris-prev').style.display = 'block';
+        G('qris-uph').style.display = 'none';
+        G('qris-upl').classList.add('has');
+      };
+      r.readAsDataURL(file);
+    }
+
+    async function submitQrisPayment() {
+      if (!A.qrisFile) { toast('❌ Upload bukti transfer dulu ya!', 'er'); return; }
+
+      const btn = document.querySelector('button[onclick="submitQrisPayment()"]');
+      const btnText = btn.innerHTML;
+      btn.innerHTML = '⏳ Memverifikasi...';
+      btn.disabled = true;
+
+      // Simulasi loading sebentar agar terasa seperti diverifikasi sistem
+      setTimeout(() => {
+        closeM('m-qris');
+        btn.innerHTML = btnText;
+        btn.disabled = false;
+
+        // Reset form QRIS
+        A.qrisFile = null;
+        G('qris-prev').src = '';
+        G('qris-prev').style.display = 'none';
+        G('qris-uph').style.display = 'block';
+        G('qris-upl').classList.remove('has');
+        G('qris-file').value = '';
+
+        // Lanjutkan ke checkout asli
+        doPayment();
+      }, 1200);
+    }
+
+    async function doPayment() {
+      const btn = document.querySelector('button[onclick="processCheckout()"]');
+      const btnText = btn.innerHTML;
+      btn.innerHTML = '⏳ Process...';
+      btn.disabled = true;
+
+      const sub = DB.cart.reduce((s, c) => {
+        const i = DB.items.find(x => x.id === c.itemId);
+        return s + (i ? i.price * c.qty : 0);
+      }, 0);
+
+      const tax = Math.round(sub * .05);
+      const total = sub + A.locCost + tax;
+      const t = now();
+
+      const ois = DB.cart.map(c => {
+        const i = DB.items.find(x => x.id === c.itemId);
+        return { itemId: c.itemId, name: i.name, storeName: i.store_name, storeId: i.store_id, price: i.price, qty: c.qty, emoji: i.emoji, eta: i.eta };
+      });
+
+      const { data: orderData, error } = await supabaseClient
+        .from('orders')
+        .insert([{
+          customer_id: A.user.id, customer_name: A.user.name, subtotal: sub, tax: tax, ongkir: A.locCost, total: total, method: A.pay, location: A.loc, items: ois, status: 'Pesanan Dikonfirmasi'
+        }]).select().single();
+
+      if (error) { toast('❌ Failed to process the payment!', 'er'); btn.innerHTML = btnText; btn.disabled = false; return; }
+
+      const shortOid = orderData.id.split('-')[0].toUpperCase();
+      const storeIds = [...new Set(ois.map(oi => oi.storeId))];
+
+      const notifs = storeIds.map(sid => {
+        const storeItems = ois.filter(oi => oi.storeId === sid);
+        const itemDetails = storeItems.map(item => `${item.qty}x ${item.name}`).join(', ');
+        return { store_id: sid, message: `Order #${shortOid}: ${A.user.name} Ordering ${itemDetails}.`, unread: true };
+      });
+
+      await supabaseClient.from('notifications').insert(notifs);
+
+      G('r-oid').textContent = 'Order #' + shortOid;
+      G('r-sub').textContent = rp(sub);
+      G('r-ongkir').textContent = rp(A.locCost);
+      G('r-tax').textContent = rp(tax);
+      G('r-total').textContent = rp(total);
+      G('r-method').textContent = A.pay;
+      G('r-loc').textContent = A.loc;
+      G('r-time').textContent = t;
+      G('r-items').innerHTML = ois.map(oi => `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd);font-size:13px"><span>${oi.emoji || ''} ${oi.name} x${oi.qty}</span><span style="font-weight:700">${rp(oi.price * oi.qty)}</span></div>`).join('');
+
+      const itemEta = ois[0].eta || '15 - 25 menit';
+      G('t-eta-text').textContent = itemEta;
+      let addMins = 20;
+      const match = itemEta.match(/\d+/g);
+      if (match) addMins = parseInt(match[match.length - 1]);
+
+      const arr = new Date();
+      arr.setMinutes(arr.getMinutes() + addMins);
+
+      G('t-step1').textContent = t;
+      G('t-oid').textContent = 'Order #' + shortOid;
+      G('t-arrive').textContent = 'Around ' + arr.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+      DB.cart = [];
+      updCartBadge();
+      btn.innerHTML = btnText;
+      btn.disabled = false;
+
+      toast('🎉 Payment Success! Order Confirmed.', 'ok');
+
+      updateTrackUI('Pesanan Dikonfirmasi');
+
+      const mainStoreId = storeIds[0];
+      const { data: driverData } = await supabaseClient.from('users').select('name, wa').eq('id', mainStoreId).single();
+
+      if (driverData) {
+        G('t-drv-name').textContent = driverData.name;
+        G('t-drv-init').textContent = driverData.name.charAt(0).toUpperCase();
+        let waNum = driverData.wa;
+        if (waNum.startsWith('0')) waNum = '62' + waNum.substring(1);
+        G('btn-call-drv').onclick = () => window.open(`tel:${driverData.wa}`, '_self');
+        const waMsg = `Halo ${driverData.name}, saya ${A.user.name} yang pesan jastip PU Grabit (Order #${shortOid}).`;
+        G('btn-wa-drv').onclick = () => window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(waMsg)}`, '_blank');
+      }
+
+      A.activeOrder = orderData;
+      startTrackingPoll(orderData.id);
+
+      goTo('page-receipt');
+    }
+
+    // ═══════════════ STORE HOME ═══════════════
+    async function renderStore() {
+      if (!A.user || A.user.role !== 'store') return;
+      const { data: userData } = await supabaseClient.from('users').select('balance').eq('id', A.user.id).single();
+      if (userData) G('store-balance').textContent = rp(userData.balance || 0);
+
+      const { data: items } = await supabaseClient.from('items').select('*').eq('store_id', A.user.id);
+      const mi = items || [];
+      G('s-total').textContent = mi.length;
+      G('s-open').textContent = mi.filter(i => i.is_open).length;
+
+      const { data: notifs } = await supabaseClient.from('notifications').select('*').eq('store_id', A.user.id).order('created_at', { ascending: false });
+      const ns = notifs || [];
+      const unread = ns.filter(n => n.unread);
+      const nb = G('notif-badge');
+      nb.textContent = unread.length;
+      nb.classList.toggle('on', unread.length > 0);
+
+      const na = G('store-notif-area');
+      if (unread.length > 0) {
+        na.style.display = 'block';
+        G('store-notif-list').innerHTML = unread.slice(0, 3).map(n => `<div class="ncrd" style="position:relative"><div class="nicbox">🛒</div><div style="flex:1; padding-right:20px"><div class="ntit">Order Baru!</div><div class="nmsg">${n.message}</div><div class="ntime">Baru saja</div></div><button style="position:absolute; right:8px; top:8px; background:none; border:none; color:var(--tx3); font-size:14px; cursor:pointer;" onclick="deleteNotif('${n.id}')" title="Delete">✕</button></div>`).join('');
+      } else { na.style.display = 'none'; }
+
+      const { data: allOrders } = await supabaseClient.from('orders').select('*').order('created_at', { ascending: false });
+      const myOrders = (allOrders || []).filter(o => o.items && o.items.some(item => item.storeId === A.user.id));
+
+      const activeOrders = myOrders.filter(o => o.status !== 'Pesanan Tiba');
+      const completedOrders = myOrders.filter(o => o.status === 'Pesanan Tiba');
+
+      G('s-orders').textContent = activeOrders.length;
+
+      const orderList = G('store-orders-list');
+      let html = '';
+      if (activeOrders.length === 0) {
+        html += `<div style="font-size:13px;color:var(--tx2);text-align:center;padding:10px;background:#fff;border-radius:8px;border:1px dashed var(--bd)">Belum ada order aktif.</div>`;
+      } else {
+        html += activeOrders.map(o => {
+          const shortId = o.id.split('-')[0].toUpperCase();
+          const myItems = o.items.filter(i => i.storeId === A.user.id);
+          const itemTxt = myItems.map(i => `${i.qty}x ${i.name}`).join(', ');
+
+          let nextStatus = '', btnText = '';
+          if (o.status === 'Pesanan Dikonfirmasi' || !o.status) {
+            nextStatus = 'Sedang Diproses'; btnText = 'Terima & Proses';
+          } else if (o.status === 'Sedang Diproses') {
+            nextStatus = 'Dalam Perjalanan'; btnText = '🛵 Kirim (OTW)';
+          } else if (o.status === 'Dalam Perjalanan') {
+            nextStatus = 'Pesanan Tiba'; btnText = '✅ Selesaikan Pesanan';
+          }
+
+          return `
+      <div class="ncrd" style="flex-direction:column; align-items:flex-start;">
+        <div style="display:flex; justify-content:space-between; width:100%; margin-bottom:5px;">
+          <span style="font-weight:800; font-size:13px; color:var(--p)">Order #${shortId}</span>
+          <span class="badge ${o.status === 'Dalam Perjalanan' ? 'bg' : 'br'}" style="background:var(--bg3);color:var(--p)">${o.status || 'Baru'}</span>
+        </div>
+        <div style="font-size:12px; margin-bottom:4px;">👤 <b>${o.customer_name}</b> | 📍 ${o.location}</div>
+        <div style="font-size:12px; color:var(--tx2); margin-bottom:10px;">📦 ${itemTxt}</div>
+        ${btnText ? `<button class="btn btn-p btn-sm btn-fw" onclick="updateOrderStatus('${o.id}', '${nextStatus}')">${btnText}</button>` : ''}
+      </div>`;
+        }).join('');
+      }
+
+      if (completedOrders.length > 0) {
+        html += `<div class="sh" style="padding:16px 0 8px"><span class="stit">✅ Riwayat Selesai</span></div>`;
+        html += completedOrders.slice(0, 5).map(o => {
+          const shortId = o.id.split('-')[0].toUpperCase();
+          return `<div class="ncrd" style="background:var(--bg2); border-left-color:var(--ok)"><div style="width:100%; font-size:12px; color:var(--tx2)"><b>Order #${shortId}</b> - ${o.customer_name}<br><span style="color:var(--ok); font-weight:700">Pesanan Selesai</span></div></div>`;
+        }).join('');
+      }
+      orderList.innerHTML = html;
+
+      const itemList = G('store-items-list');
+      if (!mi.length) {
+        itemList.innerHTML = `<div class="empty"><div class="eic">📭</div><p>Belum ada jastip.<br><span style="font-size:12px;color:var(--tx3)">Tekan + untuk menambahkan!</span></p></div>`;
+      } else {
+        itemList.innerHTML = mi.map(it => `
+      <div class="mitem">
+        <div class="miimg">${it.img_url ? `<img src="${it.img_url}">` : (it.emoji || '🛍️')}</div>
+        <div class="mibody">
+          <div class="miname">${it.name}</div>
+          <div class="miprice">${rp(it.price)}</div>
+          <div class="mimeta">
+            <span>📍 ${(it.location || '').split('–')[0].trim()}</span>
+            <span>⏱️ ${it.eta || '—'}</span>
+          </div>
+          <div class="mibtns">
+            <button class="tgl ${it.is_open ? 'tgl-ok' : 'tgl-no'}" onclick="toggleItem('${it.id}', ${it.is_open})">
+              ${it.is_open ? '✅ Open' : '❌ Close'}
+            </button>
+          </div>
+        </div>
+        <button class="delbtn" onclick="confirmDel('${it.id}', '${it.name}')" title="Hapus">🗑</button>
+      </div>`).join('');
+      }
+    }
+
+    async function updateOrderStatus(orderId, newStatus) {
+      const { data, error } = await supabaseClient.from('orders').update({ status: newStatus }).eq('id', orderId).select();
+      if (error || !data || data.length === 0) { toast('❌ Gagal update status', 'er'); return; }
+
+      if (newStatus === 'Pesanan Tiba') {
+        const order = data[0];
+        const pendapatan = Number(order.subtotal) + Number(order.ongkir);
+        const { data: currentUser } = await supabaseClient.from('users').select('balance').eq('id', A.user.id).single();
+        const saldoBaru = Number(currentUser.balance || 0) + pendapatan;
+
+        await supabaseClient.from('users').update({ balance: saldoBaru }).eq('id', A.user.id);
+        toast(`🎉 Cuan Rp ${pendapatan.toLocaleString('id-ID')} masuk ke saldo!`, 'ok');
+      } else {
+        toast(`✅ Status diubah menjadi: ${newStatus}`, 'ok');
+      }
+
+      renderStore();
+    }
+
+    async function toggleItem(id, currentStatus) {
+      const newStatus = !currentStatus;
+      const { error } = await supabaseClient.from('items').update({ is_open: newStatus }).eq('id', id);
+      if (error) { toast('❌ Gagal mengubah status!', 'er'); return; }
+      toast(newStatus ? '✅ Jastip dibuka!' : '❌ Jastip ditutup!');
+      renderStore();
+    }
+
+    function confirmDel(id, name) {
+      A.delId = id; A.delName = name;
+      openM('m-del');
+      G('del-ok-btn').onclick = async function () {
+        closeM('m-del');
+        const { error } = await supabaseClient.from('items').delete().eq('id', A.delId);
+        if (error) { toast('❌ Gagal menghapus jastip!', 'er'); }
+        else { toast('🗑️ ' + A.delName + ' berhasil dihapus!', 'ok'); renderStore(); }
+      };
+    }
+
+    async function openNotif() {
+      if (!A.user) return;
+      const { data: notifsData } = await supabaseClient.from('notifications').select('*').eq('store_id', A.user.id).order('created_at', { ascending: false });
+      const ns = notifsData || [];
+      const unreadIds = ns.filter(n => n.unread).map(n => n.id);
+
+      if (unreadIds.length > 0) {
+        await supabaseClient.from('notifications').update({ unread: false }).in('id', unreadIds);
+        G('notif-badge').classList.remove('on');
+      }
+
+      G('m-notif-body').innerHTML = !ns.length
+        ? `<p style="color:var(--tx2);font-size:13px;text-align:center;padding:16px 0">Belum ada notifikasi.</p>`
+        : ns.map(n => `<div class="ncrd" style="margin-bottom:8px; position:relative"><div class="nicbox">🛒</div><div style="flex:1; padding-right:20px"><div class="ntit">Order Baru!</div><div class="nmsg">${n.message}</div></div><button style="position:absolute; right:8px; top:8px; background:none; border:none; color:var(--tx3); font-size:14px; cursor:pointer;" onclick="deleteNotif('${n.id}')" title="Delete">✕</button></div>`).join('');
+
+      openM('m-notif');
+      renderStore();
+    }
+
+    async function deleteNotif(id) {
+      const { error } = await supabaseClient.from('notifications').delete().eq('id', id);
+      if (error) { toast('❌ Failed to delete notification!', 'er'); return; }
+      toast('🗑️ Notification deleted!', 'ok');
+
+      // Refresh UI
+      if (G('m-notif').classList.contains('open')) {
+        openNotif();
+      }
+      renderStore();
+    }
+
+    function handleImg(input) {
+      const file = input.files[0];
+      if (!file) return;
+      if (file.size > 10 * 1024 * 1024) { toast('❌ Foto max 10MB!', 'er'); return; }
+      A.imgFile = file;
+      const r = new FileReader();
+      r.onload = e => {
+        G('ai-prev').src = e.target.result;
+        G('ai-prev').style.display = 'block';
+        G('ai-uph').style.display = 'none';
+        G('ai-upl').classList.add('has');
+      };
+      r.readAsDataURL(file);
+    }
+
+    async function submitItem() {
+      const name = G('ai-name').value.trim();
+      const price = parseInt(G('ai-price').value);
+      const loc = G('ai-loc').value;
+
+      if (!name || isNaN(price) || !loc) { toast('❌ Lengkapi nama, harga, dan lokasi!', 'er'); return; }
+
+      const btn = document.querySelector('button[onclick="submitItem()"]');
+      const btnText = btn.innerHTML;
+      btn.innerHTML = '⏳ Mengunggah...';
+      btn.disabled = true;
+
+      let publicImageUrl = null;
+
+      if (A.imgFile) {
+        const fileExt = A.imgFile.name.split('.').pop();
+        const fileName = `jastip-${Date.now()}.${fileExt}`;
+        const { data: uploadData, error: uploadError } = await supabaseClient.storage.from('products').upload(fileName, A.imgFile);
+        if (uploadError) { toast('❌ Gagal mengunggah gambar', 'er'); btn.innerHTML = btnText; btn.disabled = false; return; }
+        const { data: publicUrlData } = supabaseClient.storage.from('products').getPublicUrl(fileName);
+        publicImageUrl = publicUrlData.publicUrl;
+      }
+
+      const { error } = await supabaseClient.from('items').insert([{
+        store_id: A.user.id, store_name: A.user.name, name: name, price: price, description: G('ai-desc').value.trim(),
+        location: loc, eta: G('ai-eta').value.trim(), arrive: G('ai-arrive').value, emoji: G('ai-emoji').value.trim() || '🛍️',
+        is_open: true, img_url: publicImageUrl
+      }]);
+
+      btn.innerHTML = btnText;
+      btn.disabled = false;
+
+      if (error) { toast('❌ Gagal publish jastip', 'er'); }
+      else {
+        toast('🚀 ' + name + ' berhasil dipublish!', 'ok');
+        A.imgFile = null; G('ai-prev').src = ''; G('ai-prev').style.display = 'none'; G('ai-uph').style.display = 'block'; G('ai-upl').classList.remove('has'); G('ai-name').value = ''; G('ai-price').value = '';
+        closeM('m-ai'); renderStore(); renderGrid();
+      }
+    }
+
+    // ═══════════════ TRACKING POLLING (RADAR OTOMATIS) ═══════════════
+    function startTrackingPoll(orderId) {
+      if (A.trackInterval) clearInterval(A.trackInterval);
+
+      A.trackInterval = setInterval(async () => {
+        if (A.page !== 'page-track') return;
+
+        const { data } = await supabaseClient.from('orders').select('status').eq('id', orderId).single();
+        if (data && data.status) {
+          updateTrackUI(data.status);
+          if (data.status === 'Pesanan Tiba') clearInterval(A.trackInterval);
+        }
+      }, 3000);
+    }
+
+    function updateTrackUI(status) {
+      const trackPage = G('page-track');
+      const dots = trackPage.querySelectorAll('.sdot');
+      const texts = trackPage.querySelectorAll('.stm');
+
+      dots.forEach(d => d.className = 'sdot pend');
+      texts[1].textContent = 'On Process...';
+      texts[2].textContent = 'Waiting...';
+      texts[2].style.color = 'var(--tx3)';
+      texts[2].style.fontWeight = '400';
+      texts[3].textContent = 'Waiting...';
+      texts[3].style.color = 'var(--tx3)';
+      texts[3].style.fontWeight = '400';
+
+      if (status === 'Pesanan Dikonfirmasi' || !status) {
+        dots[0].className = 'sdot cur';
+      } else if (status === 'Sedang Diproses') {
+        dots[0].className = 'sdot done';
+        dots[1].className = 'sdot cur';
+        texts[1].textContent = 'Driver is preparing your order...';
+      } else if (status === 'Dalam Perjalanan') {
+        dots[0].className = 'sdot done';
+        dots[1].className = 'sdot done';
+        dots[2].className = 'sdot cur';
+        texts[2].textContent = 'Driver on the way...';
+        texts[2].style.color = 'var(--p)';
+        texts[2].style.fontWeight = '700';
+      } else if (status === 'Pesanan Tiba') {
+        dots.forEach(d => d.className = 'sdot done');
+        texts[3].textContent = 'Order Arrived! Enjoy your meal.';
+        texts[3].style.color = 'var(--ok)';
+        texts[3].style.fontWeight = '700';
+
+        const aoCard = G('cust-active-order');
+        if (aoCard) aoCard.style.display = 'none';
+        A.activeOrder = null;
+      }
+    }
+
+    async function checkActiveOrder() {
+      if (!A.user) return;
+      const { data: actOrders } = await supabaseClient.from('orders').select('*').eq('customer_id', A.user.id).neq('status', 'Pesanan Tiba').order('created_at', { ascending: false }).limit(1);
+
+      const aoCard = G('cust-active-order');
+      if (actOrders && actOrders.length > 0) {
+        A.activeOrder = actOrders[0];
+        aoCard.style.display = 'block';
+
+        let displayStatus = A.activeOrder.status;
+        if (displayStatus === 'Pesanan Dikonfirmasi') displayStatus = 'Order Confirmed ✅';
+        else if (displayStatus === 'Sedang Diproses') displayStatus = 'On Process 🛒';
+        else if (displayStatus === 'Dalam Perjalanan') displayStatus = 'On the Way 🛵';
+
+        G('ao-status').textContent = displayStatus;
+        startTrackingPoll(A.activeOrder.id);
+      } else {
+        aoCard.style.display = 'none';
+        A.activeOrder = null;
+        if (A.trackInterval) clearInterval(A.trackInterval);
+      }
+    }
+
+    async function goToTracking() {
+      if (!A.activeOrder) return;
+      const o = A.activeOrder;
+      const shortOid = o.id.split('-')[0].toUpperCase();
+
+      G('t-oid').textContent = 'Order #' + shortOid;
+
+      const itemEta = o.items[0]?.eta || '15 - 25 menit';
+      G('t-eta-text').textContent = itemEta;
+
+      let addMins = 20;
+      const match = itemEta.match(/\d+/g);
+      if (match) addMins = parseInt(match[match.length - 1]);
+
+      const orderDate = new Date(o.created_at || Date.now());
+      G('t-step1').textContent = orderDate.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+      orderDate.setMinutes(orderDate.getMinutes() + addMins);
+      G('t-arrive').textContent = 'Around ' + orderDate.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+      updateTrackUI(o.status);
+
+      const storeIds = [...new Set(o.items.map(oi => oi.storeId))];
+      const mainStoreId = storeIds[0];
+      const { data: driverData } = await supabaseClient.from('users').select('name, wa').eq('id', mainStoreId).single();
+
+      if (driverData) {
+        G('t-drv-name').textContent = driverData.name;
+        G('t-drv-init').textContent = driverData.name.charAt(0).toUpperCase();
+        let waNum = driverData.wa;
+        if (waNum.startsWith('0')) waNum = '62' + waNum.substring(1);
+        G('btn-call-drv').onclick = () => window.open(`tel:${driverData.wa}`, '_self');
+        const waMsg = `Halo ${driverData.name}, saya ${A.user.name} yang pesan jastip PU Grabit (Order #${shortOid}).`;
+        G('btn-wa-drv').onclick = () => window.open(`https://wa.me/${waNum}?text=${encodeURIComponent(waMsg)}`, '_blank');
+      }
+
+      goTo('page-track');
+    }
+
+    // ═══════════════ PROFILE ═══════════════
+    function renderProfile() {
+      if (!A.user) return;
+      G('prof-name-disp').textContent = A.user.name;
+      G('prof-email-disp').textContent = A.user.email;
+      G('prof-role-disp').textContent = A.user.role === 'customer' ? 'Customer' : 'Store & Driver';
+      G('prof-role-disp').className = A.user.role === 'customer' ? 'badge bg' : 'badge br';
+
+      G('prof-name').value = A.user.name;
+      G('prof-pass').value = '';
+
+      const init = A.user.name.charAt(0).toUpperCase();
+      G('prof-av-init').textContent = init;
+
+      const savedAvatar = localStorage.getItem('avatar_' + A.user.id) || A.user.avatar_url;
+      if (savedAvatar) {
+        G('prof-pic-preview').src = savedAvatar;
+        G('prof-pic-preview').style.display = 'block';
+        G('prof-av-init').style.display = 'none';
+      } else {
+        G('prof-pic-preview').style.display = 'none';
+        G('prof-av-init').style.display = 'inline';
+      }
+    }
+
+    function handleProfPic(input) {
+      const file = input.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { toast('❌ Image max 5MB!', 'er'); return; }
+
+      A.profPicFile = file;
+      const r = new FileReader();
+      r.onload = e => {
+        G('prof-pic-preview').src = e.target.result;
+        G('prof-pic-preview').style.display = 'block';
+        G('prof-av-init').style.display = 'none';
+      };
+      r.readAsDataURL(file);
+    }
+
+    async function saveProfile() {
+      const newName = G('prof-name').value.trim();
+      const newPass = G('prof-pass').value;
+
+      if (!newName) { toast('❌ Name cannot be empty!', 'er'); return; }
+
+      const btn = G('btn-save-prof');
+      const btnText = btn.innerHTML;
+      btn.innerHTML = '⏳ Saving...';
+      btn.disabled = true;
+
+      let publicImageUrl = A.user.avatar_url || localStorage.getItem('avatar_' + A.user.id);
+
+      if (A.profPicFile) {
+        const fileExt = A.profPicFile.name.split('.').pop();
+        const fileName = `avatar-${A.user.id}-${Date.now()}.${fileExt}`;
+        const { data: uploadData, error: uploadError } = await supabaseClient.storage.from('products').upload(fileName, A.profPicFile);
+        if (!uploadError) {
+          const { data: publicUrlData } = supabaseClient.storage.from('products').getPublicUrl(fileName);
+          publicImageUrl = publicUrlData.publicUrl;
+          localStorage.setItem('avatar_' + A.user.id, publicImageUrl);
+        } else {
+          toast('❌ Failed to upload avatar', 'er');
+          console.error(uploadError);
+        }
+      }
+
+      if (newPass) {
+        if (newPass.length < 6) {
+          toast('❌ Password min. 6 characters!', 'er');
+          btn.innerHTML = btnText; btn.disabled = false; return;
+        }
+        const { error: authErr } = await supabaseClient.auth.updateUser({ password: newPass });
+        if (authErr) {
+          toast('❌ Failed to update password!', 'er');
+          btn.innerHTML = btnText; btn.disabled = false; return;
+        }
+      }
+
+      const updatePayload = { name: newName };
+      if (publicImageUrl) updatePayload.avatar_url = publicImageUrl;
+
+      const { error: dbErr } = await supabaseClient.from('users').update(updatePayload).eq('id', A.user.id);
+
+      if (dbErr) {
+        const { error: dbErr2 } = await supabaseClient.from('users').update({ name: newName }).eq('id', A.user.id);
+        if (dbErr2) {
+          toast('❌ Failed to save profile!', 'er');
+          btn.innerHTML = btnText; btn.disabled = false; return;
+        }
+      }
+
+      A.user.name = newName;
+      if (publicImageUrl) A.user.avatar_url = publicImageUrl;
+
+      if (A.user.role === 'customer') {
+        if (publicImageUrl) {
+          G('cust-av').innerHTML = `<img src="${publicImageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+        } else {
+          G('cust-av').textContent = newName.charAt(0).toUpperCase();
+          G('cust-av').innerHTML = '';
+          G('cust-av').textContent = newName.charAt(0).toUpperCase();
+        }
+        G('cust-greet').textContent = 'Hello, ' + newName.split(' ')[0] + '! 👋';
+      } else {
+        if (publicImageUrl) {
+          G('store-av').innerHTML = `<img src="${publicImageUrl}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+        } else {
+          G('store-av').textContent = newName.charAt(0).toUpperCase();
+          G('store-av').innerHTML = '';
+          G('store-av').textContent = newName.charAt(0).toUpperCase();
+        }
+        G('store-welcome').textContent = newName;
+      }
+
+      renderProfile();
+      toast('✅ Profile saved successfully!', 'ok');
+
+      btn.innerHTML = btnText;
+      btn.disabled = false;
+      A.profPicFile = null;
+    }
+
+    updCartBadge();
+  </script>
+</body>
+
+</html>
